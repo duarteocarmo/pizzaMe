@@ -1,22 +1,44 @@
 import React, { Component } from 'react';
 import { View, Text, Button, StatusBar } from 'react-native';
+import api from '../services/api';
+import API_KEY from '../services/api';
 
 export default class Main extends Component {
+	state = {
+		businesses: []
+	};
+
 	static navigationOptions = {
 		title: 'PizzaMe',
 		headerStyle: {
-			backgroundColor: '#CD3D23'
+			backgroundColor: '#FF5900'
 		},
 		headerTitleStyle: {
 			fontWeight: 'bold'
 		},
 		headerTintColor: '#fff'
 	};
+
+	componentDidMount() {
+		this.loadLocations();
+	}
+
+	loadLocations = async () => {
+		const response = await api.get();
+
+		const { businesses } = response.data;
+
+		this.setState({ businesses });
+	};
+
 	render() {
 		return (
 			<View>
-				<StatusBar hidden="false" barStyle="light-content" />
-				<Text>Aqui vou começar a mostrar bue da sitios para comer pizaa...</Text>
+				<StatusBar barStyle="light-content" />
+				<Text>Best rated pizza places nearby:</Text>
+				{this.state.businesses.map((business) => (
+					<Text key={business.id}>{business.name}</Text>
+				))}
 			</View>
 		);
 	}
