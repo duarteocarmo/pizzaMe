@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Button, StatusBar } from 'react-native';
 import api from '../services/api';
-import API_KEY from '../services/api';
 
 export default class Main extends Component {
 	state = {
@@ -29,6 +28,8 @@ export default class Main extends Component {
 		const { businesses } = response.data;
 
 		this.setState({ businesses });
+
+		console.log('Fetched businesses..')
 	};
 
 	render() {
