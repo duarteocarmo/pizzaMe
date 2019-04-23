@@ -5,3 +5,10 @@ Pizza Me is an app made with react native that allows you to quickly find the to
 ## Purpose
 
 Just experimenting with React Native. 
+
+## To Do
+
+- [ ] Make yelp request based on user location
+- [ ] Style presented cards
+- [ ] Use react-native-paper
+- [ ] Maybe other foods 🤔
