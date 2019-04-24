@@ -7,7 +7,9 @@ export default class Main extends Component {
 	state = {
 		businesses: [],
 		location: null,
-		errorMessage: null
+		errorMessage: null,
+		latitude: null,
+		longitude: null
 	};
 
 	static navigationOptions = {
@@ -19,6 +21,34 @@ export default class Main extends Component {
 			fontWeight: 'bold'
 		},
 		headerTintColor: '#fff'
+	};
+
+	_getLocationAsync = async () => {
+		let { status } = await Permissions.askAsync(Permissions.LOCATION);
+		if (status !== 'granted') {
+			this.setState({
+				errorMessage: 'Location access was denied..'
+			});
+		}
+		let location = await Location.getCurrentPositionAsync({});
+		let {
+			coords: { latitude, longitude }
+		} = location;
+		this.setState({ location, latitude, longitude });
+	};
+
+	loadLocations = async () => {
+		console.log(this.state);
+
+		const response = await api.get('/', {
+			params: {
+				categories: 'pizza'
+			}
+		});
+
+		const { businesses } = response.data;
+
+		this.setState({ businesses });
 	};
 
 	componentDidMount() {
@@ -33,30 +63,10 @@ export default class Main extends Component {
 		this.loadLocations();
 	}
 
-	_getLocationAsync = async () => {
-		let { status } = await Permissions.askAsync(Permissions.LOCATION);
-		if (status !== 'granted') {
-			this.setState({
-				errorMessage: 'Location access was denied..'
-			});
-		}
-		let location = await Location.getCurrentPositionAsync({});
-		this.setState({ location });
-	};
-
-	loadLocations = async () => {
-		const response = await api.get();
-
-		const { businesses } = response.data;
-
-		this.setState({ businesses });
-
-		console.log('Fetched businesses..');
-	};
-
 	render() {
 		let text = 'Waiting...';
 		if (this.state.errorMessage) {
+			// dont present anything...
 			text = this.state.errorMessage;
 		} else if (this.state.location) {
 			text = JSON.stringify(this.state.location);
@@ -66,6 +76,7 @@ export default class Main extends Component {
 				<StatusBar barStyle="light-content" />
 				<Text>Best rated pizza places nearby:</Text>
 				<Text>Your location is {text}</Text>
+				<Text>Lat: {this.state.latitude}</Text>
 				{this.state.businesses.map((business) => (
 					<Text key={business.id}>
 						{business.name} with {business.rating}
