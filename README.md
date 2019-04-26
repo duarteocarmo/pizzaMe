@@ -8,7 +8,7 @@ Just experimenting with React Native.
 
 ## To Do
 
-- [ ] Make yelp request based on user location
+- [x] Make yelp request based on user location
 - [ ] Style presented cards
 - [ ] Use react-native-paper
 - [ ] Maybe other foods 🤔
