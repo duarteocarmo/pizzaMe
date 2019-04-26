@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button, StatusBar, Platform } from 'react-native';
+import { View, Text, StatusBar, Platform } from 'react-native';
 import api from '../services/api';
 import { Constants, Location, Permissions } from 'expo';
 
@@ -31,18 +31,20 @@ export default class Main extends Component {
 			});
 		}
 		let location = await Location.getCurrentPositionAsync({});
-		let {
-			coords: { latitude, longitude }
-		} = location;
-		this.setState({ location, latitude, longitude });
+		console.log('Location was set.');
+		this.setState({ location }, () => {
+			this.loadLocations();
+		});
 	};
 
 	loadLocations = async () => {
-		console.log(this.state);
+		console.log(this.state.location.coords.latitude);
 
 		const response = await api.get('/', {
 			params: {
-				categories: 'pizza'
+				categories: 'pizza',
+				latitude: `${this.state.location.coords.latitude}`,
+				longitude: `${this.state.location.coords.longitude}`
 			}
 		});
 
@@ -59,14 +61,12 @@ export default class Main extends Component {
 		} else {
 			this._getLocationAsync();
 		}
-
-		this.loadLocations();
 	}
 
 	render() {
 		let text = 'Waiting...';
 		if (this.state.errorMessage) {
-			// dont present anything...
+			// dont present anyting...
 			text = this.state.errorMessage;
 		} else if (this.state.location) {
 			text = JSON.stringify(this.state.location);
@@ -75,8 +75,7 @@ export default class Main extends Component {
 			<View>
 				<StatusBar barStyle="light-content" />
 				<Text>Best rated pizza places nearby:</Text>
-				<Text>Your location is {text}</Text>
-				<Text>Lat: {this.state.latitude}</Text>
+				<Text >Location Object:{text}</Text>
 				{this.state.businesses.map((business) => (
 					<Text key={business.id}>
 						{business.name} with {business.rating}
