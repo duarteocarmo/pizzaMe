@@ -13,5 +13,5 @@ Just experimenting with React Native.
 - [ ] Use react-native-paper
 - [ ] Maybe other foods 🤔
 
-## Shots
-<img src="status.png" alt="pizzaMe" />
+## Shot
+![Shot](shot.png)
