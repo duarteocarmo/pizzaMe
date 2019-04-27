@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StatusBar, Platform } from 'react-native';
+import { View, Text, StatusBar, Platform, FlatList } from 'react-native';
 import api from '../services/api';
 import { Constants, Location, Permissions } from 'expo';
 
@@ -7,9 +7,7 @@ export default class Main extends Component {
 	state = {
 		businesses: [],
 		location: null,
-		errorMessage: null,
-		latitude: null,
-		longitude: null
+		errorMessage: null
 	};
 
 	static navigationOptions = {
@@ -31,15 +29,12 @@ export default class Main extends Component {
 			});
 		}
 		let location = await Location.getCurrentPositionAsync({});
-		console.log('Location was set.');
 		this.setState({ location }, () => {
 			this.loadLocations();
 		});
 	};
 
 	loadLocations = async () => {
-		console.log(this.state.location.coords.latitude);
-
 		const response = await api.get('/', {
 			params: {
 				categories: 'pizza',
@@ -75,12 +70,12 @@ export default class Main extends Component {
 			<View>
 				<StatusBar barStyle="light-content" />
 				<Text>Best rated pizza places nearby:</Text>
-				<Text >Location Object:{text}</Text>
-				{this.state.businesses.map((business) => (
-					<Text key={business.id}>
-						{business.name} with {business.rating}
-					</Text>
-				))}
+				<Text>Location Object:{text}</Text>
+				<FlatList 
+				data={this.state.businesses}
+				renderItem={({ item }) => <Text key={item.id}>{item.name}</Text>} 
+				keyExtractor={(item, index) => item.id}
+				/>
 			</View>
 		);
 	}
