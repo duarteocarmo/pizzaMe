@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StatusBar, Platform, FlatList, StyleSheet } from 'react-native';
+import { View, Text, StatusBar, Platform, FlatList, StyleSheet, Image } from 'react-native';
 import api from '../services/api';
 import { Constants, Location, Permissions } from 'expo';
 
@@ -60,9 +60,13 @@ export default class Main extends Component {
 
 	renderItem = ({ item }) => (
 		<View style={styles.restaurantContainer}>
-			<Text style={styles.restaurantTitle}>{item.name}</Text>
-			<Text style={styles.restaurantRating}>Rating: {item.rating}/5</Text>
-			<Text style={styles.restaurantPrice}>{item.price}</Text>
+			<View style={{}}>
+				<Text style={styles.restaurantTitle}>{item.name}</Text>
+				<Text style={styles.restaurantRating}>Rating: {item.rating}/5</Text>
+				<Text style={styles.restaurantPrice}>{item.price}</Text>
+			</View>
+
+			<Image style={styles.restaurantImage} source={{ uri: item.image_url }} />
 		</View>
 	);
 
@@ -108,17 +112,27 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		shadowRadius: 1.41,
 
-		elevation: 2
-		// flexDirection: 'row',
-		// flex: 1
+		elevation: 2,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
 	},
 	restaurantTitle: {
 		fontWeight: 'bold',
-		fontSize: 15
+		fontSize: 15,
+		flex: 1
+	},
+	restaurantImage: {
+		height: 50,
+		width: 50,
+		alignSelf: 'center'
 	},
 	container: {
 		backgroundColor: '#FE9D00'
-	},
-	restaurantPrice: {},
-	restaurantRating: {}
+	}
+	// restaurantPrice: {
+	// 	flex: 1
+	// },
+	// restaurantRating: {
+	// 	flex: 1
+	// }
 });
