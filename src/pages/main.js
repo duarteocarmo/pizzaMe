@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StatusBar, Platform, FlatList } from 'react-native';
+import { View, Text, StatusBar, Platform, FlatList, StyleSheet } from 'react-native';
 import api from '../services/api';
 import { Constants, Location, Permissions } from 'expo';
 
@@ -13,7 +13,7 @@ export default class Main extends Component {
 	static navigationOptions = {
 		title: 'PizzaMe 🍕',
 		headerStyle: {
-			backgroundColor: '#FE9D00'
+			backgroundColor: '#CD3D23'
 		},
 		headerTitleStyle: {
 			fontWeight: 'bold'
@@ -58,10 +58,17 @@ export default class Main extends Component {
 		}
 	}
 
+	renderItem = ({ item }) => (
+		<View style={styles.restaurantContainer}>
+			<Text style={styles.restaurantTitle}>{item.name}</Text>
+			<Text style={styles.restaurantRating}>Rating: {item.rating}/5</Text>
+			<Text style={styles.restaurantPrice}>{item.price}</Text>
+		</View>
+	);
+
 	render() {
 		let text = 'Waiting...';
 		if (this.state.errorMessage) {
-			// dont present anyting...
 			text = this.state.errorMessage;
 		} else if (this.state.location) {
 			text = JSON.stringify(this.state.location);
@@ -69,14 +76,49 @@ export default class Main extends Component {
 		return (
 			<View>
 				<StatusBar barStyle="light-content" />
-				<Text>Best rated pizza places nearby:</Text>
-				<Text>Location Object:{text}</Text>
-				<FlatList 
-				data={this.state.businesses}
-				renderItem={({ item }) => <Text key={item.id}>{item.name}</Text>} 
-				keyExtractor={(item, index) => item.id}
-				/>
+				<View style={styles.container}>
+					<FlatList
+						data={this.state.businesses}
+						renderItem={this.renderItem}
+						keyExtractor={(item, index) => item.id}
+						contentContainerStyle={styles.list}
+					/>
+				</View>
 			</View>
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	list: {
+		padding: 15
+	},
+	restaurantContainer: {
+		backgroundColor: '#F4F4F4',
+		borderWidth: 1,
+		borderColor: '#F4F4F4',
+		borderRadius: 5,
+		padding: 15,
+		marginBottom: 20,
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 1
+		},
+		shadowOpacity: 0.2,
+		shadowRadius: 1.41,
+
+		elevation: 2,
+		// flexDirection: 'row',
+		// flex: 1
+	},
+	restaurantTitle: {
+		fontWeight: 'bold',
+		fontSize: 15
+	},
+	container: {
+		backgroundColor: '#FE9D00'
+	},
+	restaurantPrice: {},
+	restaurantRating: {}
+});
