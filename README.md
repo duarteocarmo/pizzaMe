@@ -12,3 +12,6 @@ Just experimenting with React Native.
 - [ ] Style presented cards
 - [ ] Use react-native-paper
 - [ ] Maybe other foods 🤔
+
+## Shots
+<img src="status.png" alt="pizzaMe" />
